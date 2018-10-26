@@ -1,0 +1,21 @@
+<resources>
+    <string name="preguntaEdad">SPACE INVADERS</string>
+    <string name="edad">Edad</string>
+    <string name="introducir">JUGAR</string>
+
+
+    <string name="app_name">Space Invaders</string>
+    <string name="title_activity_mayor">MayorActivity</string>
+    <string name="title_activity_menor">MenorActivity</string>
+
+    <string name="alien">alien</string>
+    <string name="nave">nave</string>
+    <string name="cuadrado">cuadrado</string>
+    <string name="derecha">derecha</string>
+    <string name="izquierda">izquierda</string>
+    <string name="disparar">disparar</string>
+
+    <string name="title_activity_juego_violento">JuegoViolento</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>
