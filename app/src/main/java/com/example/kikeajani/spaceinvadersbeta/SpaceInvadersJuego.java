@@ -118,7 +118,7 @@ public class SpaceInvadersJuego extends SurfaceView implements Runnable {
         controladorObjetos.add("nave", nave);
 
         for (int i = 0; i < disparosAlien.length; i++) {
-            disparosAlien[i] = new Disparo(screenY, this, false, velocidadGlobal);
+            disparosAlien[i] = new Disparo(screenY, screenX, this, false, velocidadGlobal);
             controladorObjetos.add("disparoAlien" + i, disparosAlien[i]);
         }
 
@@ -168,10 +168,10 @@ public class SpaceInvadersJuego extends SurfaceView implements Runnable {
                                 buttonPress = true;
                                 break;*/
                             case Shoot:
-                                Disparo disparo = new Disparo(screenY, this, true, velocidadGlobal);
+                                Disparo disparo = new Disparo(screenY, screenX, this, true, velocidadGlobal);
                                 numDisparos++;
                                 controladorObjetos.add("disparo" + numDisparos, disparo);
-                                if (disparo.disparar(nave.getPosition().x + nave.getLength() / 2, nave.getPosition().y, Disparo.Direction.Arriba)) {
+                                if (disparo.disparar(nave.getPosition().x + nave.getLength() / 2, nave.getPosition().y, Disparo.Direction.Arriba, true)) {
                                     buttonPress = true;
                                 }
                                 break;

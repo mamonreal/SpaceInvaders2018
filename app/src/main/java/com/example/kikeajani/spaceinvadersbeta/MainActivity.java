@@ -11,6 +11,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private EditText anyos;
+    private EditText nombre;
     private TextView error;
 
     @Override
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         anyos = (EditText) findViewById(R.id.anyos);
+        nombre = (EditText) findViewById(R.id.nombre);
         error = (TextView) findViewById(R.id.error);
     }
 
@@ -39,11 +41,15 @@ public class MainActivity extends AppCompatActivity {
         try {
             String anyos_s = anyos.getText().toString();
             int anyos_int = Integer.parseInt(anyos_s);
-
-            if (anyos_int <= 13) {
-                ejecutarMenor(view);
-            } else {
-                ejecutarMayor(view);
+            String name = nombre.getText().toString();
+            if(name.equals("")){
+                error.setText("Nombre no válido");
+            }else {
+                if (anyos_int <= 13) {
+                    ejecutarMenor(view);
+                } else {
+                    ejecutarMayor(view);
+                }
             }
         } catch (Exception e) {
             error.setText("Edad no válida");
