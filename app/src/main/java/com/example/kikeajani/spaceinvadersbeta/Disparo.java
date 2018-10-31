@@ -13,26 +13,36 @@ public class Disparo extends ObjetoVisible {
 
     public enum Direction{SinDireccion, Arriba, Abajo}
 
+    public enum Tipo{Nave, Alien, General}
+
     private boolean activo; // si el disparo esta activo
 
     private Direction direccion; // direccion del disparo
 
     private float velocidad;
+    private float inclinacion;
 
     private int screenY;
+    private int screenX;
 
-    private boolean nave;
+    private Tipo tipo;
 
 
-    public Disparo(int screenY, SpaceInvadersJuego sij, boolean nave, float velocidad){
-        this.nave = nave;
+    public Disparo(int screenY, int screenX, SpaceInvadersJuego sij, boolean nave, float velocidad){
+        if (nave) {
+            this.tipo = Tipo.Nave;
+        } else {
+            this.tipo = Tipo.Alien;
+        }
         this.spaceInvadersJuego = sij;
+        this.screenX = screenX;
         this.screenY = screenY;
-        int height = screenY / 40;
-        int length = 6;
+        int height = screenY / 75;
+        int length = screenY / 75;
         setSize(length, height);
         direccion = Direction.SinDireccion;
         this.velocidad = (velocidad / 4);
+        inclinacion = 0;
         activo = false;
     }
 
@@ -44,23 +54,29 @@ public class Disparo extends ObjetoVisible {
 
             //Nueva posicion
             if (direccion == Direction.Arriba) {
-                posicion.y = posicion.y - velocidad;
+                posicion.y -= velocidad;
             } else {
-                posicion.y = posicion.y + velocidad;
+                posicion.y += velocidad;
             }
+            if (inclinacion != 0) {
+                posicion.x -= (inclinacion);
+            }
+
             //Actualizar posicion
             setPosition(posicion.x, posicion.y);
         }
 
         //Colisiones
 
+        /*
         //Parte superior o inferior de la pantalla
         if(getImpactPointY() < 0 || getImpactPointY() > screenY){
             setInactive();
         }
+        */
 
         //Disparo nave - alien
-        if(activo && direccion == Direction.Arriba){
+        if(activo && ((tipo == Tipo.Nave) || (tipo == Tipo.General))) {
             for(int i = 0; i < spaceInvadersJuego.getNumAliens(); i++){
                 Alien alien = (Alien) spaceInvadersJuego.getControladorObjetos().get("alien" + i);
                 if(alien.getVisibility()){
@@ -69,6 +85,16 @@ public class Disparo extends ObjetoVisible {
                         setInactive();
                     }
                 }
+            }
+        }
+
+        //Disparo alien - nave
+        if(activo && ((tipo == Tipo.Alien) || (tipo == Tipo.General))){
+            Nave nave = (Nave) spaceInvadersJuego.getControladorObjetos().get("nave");
+            if (RectF.intersects(nave.getBoundingRect(), getBoundingRect())) {
+                setInactive();
+                nave.setInvisible();
+                spaceInvadersJuego.mostrarPuntuacionFin();
             }
         }
 
@@ -83,39 +109,46 @@ public class Disparo extends ObjetoVisible {
                         for (Alien alien:spaceInvadersJuego.getAliens()){
                             alien.cambiarColor();
                         }
-
                     }
                 }
             }
         }
 
-        //Disparo alien - nave
-        if(activo && direccion == Direction.Abajo){
-            Nave nave = (Nave) spaceInvadersJuego.getControladorObjetos().get("nave");
-            if (RectF.intersects(nave.getBoundingRect(), getBoundingRect())) {
-                setInactive();
-                nave.setInvisible();
-                spaceInvadersJuego.mostrarPuntuacionFin();
-            }
+        //Rebote arriba o abajo
+        if ((getImpactPointY() - getHeight()) > screenY) {
+            direccion = Direction.Arriba;
+            tipo = Tipo.General;
+            inclinacion = (float) Math.random() * 30 - 15;
+        } else if (getImpactPointY() < 0) {
+            direccion = Direction.Abajo;
+            tipo = Tipo.General;
+            inclinacion = (float) Math.random() * 30 - 15;
         }
+
+        //Rebote lateral
+        if ((getImpactPointX() > screenX) || (getImpactPointX() < 0)) {
+            inclinacion = inclinacion * -1;
+        }
+
     }
 
     @Override
     public void draw (Canvas canvas, Paint paint) {
         if(activo){
-            if (nave) {
-                paint.setColor(Color.argb(255, 59, 131, 189));
-                canvas.drawRect(getBoundingRect(), paint);
-            } else {
-                paint.setColor(Color.argb(255, 255, 0, 0));
-                canvas.drawRect(getBoundingRect(), paint);
-            }
+            paint.setColor(Color.argb(255, 255, 0, 0));
+            canvas.drawRect(getBoundingRect(), paint);
         }
     }
 
-    public boolean disparar(float startX, float startY, Direction direccion) {
+    public boolean disparar(float startX, float startY, Direction direccion, boolean nave) {
 
         if(!activo){
+            if (nave) {
+                this.tipo = Tipo.Nave;
+            } else {
+                this.tipo = Tipo.Alien;
+            }
+
             // get current position
             PointF loc = getPosition();
 
@@ -123,6 +156,7 @@ public class Disparo extends ObjetoVisible {
             loc.x = startX;
             loc.y = startY;
             setPosicionInicial(loc.x, loc.y);
+            inclinacion = 0;
 
             this.direccion = direccion;
             activo = true;
@@ -147,6 +181,10 @@ public class Disparo extends ObjetoVisible {
         else{
             return getPosition().y;
         }
+    }
+
+    public float getImpactPointX(){
+        return getPosition().x + (getLength() / 2);
     }
 
 }
