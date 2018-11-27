@@ -10,25 +10,34 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:name="spaceInvaders.Activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MayorActivity"
+            android:name="spaceInvaders.Activities.MayorActivity"
             android:label="@string/title_activity_mayor"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MenorActivity"
+            android:name="spaceInvaders.Activities.MayorActivityRebotes"
+            android:label="@string/title_activity_mayor"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="spaceInvaders.Activities.MenorActivity"
             android:label="@string/title_activity_menor"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FinDelJuegoActivity"></activity>
+        <activity
+            android:name="spaceInvaders.Activities.PuntuacionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>
